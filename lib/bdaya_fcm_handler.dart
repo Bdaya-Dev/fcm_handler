@@ -17,14 +17,14 @@ enum NotificationSource {
 
 Future<void> handleBackgroundNotifs(RemoteMessage message) async {
   Get.find<FCMServiceBase>()
-      .raiseEvent(NotificationSource.OnBackgroundMessage, message);
+      ._raiseEvent(NotificationSource.OnBackgroundMessage, message);
 }
 
 class CombinedUserToken {
   final String userId;
   final String token;
 
-  CombinedUserToken(this.userId, this.token);
+  CombinedUserToken._(this.userId, this.token);
 }
 
 typedef NotificationHandlerFunc = void Function(
@@ -46,20 +46,22 @@ class FCMServiceBase extends GetxService {
           return Stream.value(null);
         } else {
           return FirebaseMessaging.instance.onTokenRefresh
-              .map((token) => CombinedUserToken(user.uid, token));
+              .map((token) => CombinedUserToken._(user.uid, token));
         }
       });
 
-  void raiseEvent(NotificationSource src, RemoteMessage message) {
+  void _raiseEvent(NotificationSource src, RemoteMessage message) {
     for (var sub in _notificationSubscribers) {
       sub(src, message);
     }
   }
 
+  /// Registers a notification subscriber
   void registerSubscriber(NotificationHandlerFunc handler) {
     _notificationSubscribers.add(handler);
   }
 
+  /// unRegisters a notification subscriber
   void unregisterSubscriber(NotificationHandlerFunc handler) {
     _notificationSubscribers.remove(handler);
   }
@@ -67,21 +69,20 @@ class FCMServiceBase extends GetxService {
   Future<void> doInit() async {
     final initMessage = await FirebaseMessaging.instance.getInitialMessage();
     if (initMessage != null) {
-      raiseEvent(NotificationSource.InitialMessage, initMessage);
+      _raiseEvent(NotificationSource.InitialMessage, initMessage);
     }
     _streamSubs['onMessage'] = FirebaseMessaging.onMessage.listen((event) {
-      raiseEvent(NotificationSource.OnMessage, event);
+      _raiseEvent(NotificationSource.OnMessage, event);
     });
-    //TODO: reenable background messaging after they fix it
+    //TODO: re-enable background messaging after they fix it
     //FirebaseMessaging.onBackgroundMessage(handleBackgroundNotifs);
     _streamSubs['onMessageOpenedApp'] =
         FirebaseMessaging.onMessageOpenedApp.listen((event) {
-      raiseEvent(NotificationSource.OnMessageOpenedApp, event);
+      _raiseEvent(NotificationSource.OnMessageOpenedApp, event);
     });
   }
 
   @override
-  @mustCallSuper
   void onClose() async {
     for (var item in _streamSubs.values) {
       await item.cancel();

@@ -16,7 +16,7 @@ enum NotificationSource {
 }
 
 Future<void> handleBackgroundNotifs(RemoteMessage message) async {
-  Get.find<FCMServiceBase>()
+  Get.find<FCMService>()
       ._raiseEvent(NotificationSource.OnBackgroundMessage, message);
 }
 
@@ -33,7 +33,7 @@ typedef NotificationHandlerFunc = void Function(
 /// First: register this service (using normal [Get.put])
 /// Second: register your listeners using [registerSubscriber]
 /// Third: call doInit
-class FCMServiceBase extends GetxService {
+class FCMService extends GetxService {
   final Map<String, StreamSubscription> _streamSubs = {};
 
   final _notificationSubscribers = <NotificationHandlerFunc>{};

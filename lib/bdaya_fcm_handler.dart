@@ -39,7 +39,7 @@ class FCMService extends GetxService {
   final _notificationSubscribers = <NotificationHandlerFunc>{};
 
   /// A helper stream that combines the current user with its token
-  Stream get combinedAuthTokenStream => FirebaseAuth.instance
+  Stream<CombinedUserToken> get combinedAuthTokenStream => FirebaseAuth.instance
           .authStateChanges()
           .switchMap<CombinedUserToken>((user) {
         if (user == null) {

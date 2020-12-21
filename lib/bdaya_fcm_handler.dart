@@ -6,14 +6,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/rxdart.dart' as rx;
 
-enum NotificationSource {
-  InitialMessage,
-  OnMessage,
-  OnBackgroundMessage,
-  OnMessageOpenedApp
-}
+enum NotificationSource { OnMessage, OnBackgroundMessage, OnMessageOpenedApp }
 
 Future<void> handleBackgroundNotifs(RemoteMessage message) async {
   Get.find<FCMService>()
@@ -39,16 +34,12 @@ class FCMService extends GetxService {
   final _notificationSubscribers = <NotificationHandlerFunc>{};
 
   /// A helper stream that combines the current user with its token
-  Stream<CombinedUserToken> get combinedAuthTokenStream => FirebaseAuth.instance
-          .authStateChanges()
-          .switchMap<CombinedUserToken>((user) {
-        if (user == null) {
-          return Stream.value(null);
-        } else {
-          return FirebaseMessaging.instance.onTokenRefresh
-              .map((token) => CombinedUserToken._(user.uid, token));
-        }
-      });
+  Stream<CombinedUserToken> get combinedAuthTokenStream =>
+      rx.Rx.combineLatest2<User, String, CombinedUserToken>(
+        FirebaseAuth.instance.authStateChanges(),
+        FirebaseMessaging.instance.onTokenRefresh,
+        (a, b) => CombinedUserToken._(a.uid, b),
+      );
 
   void _raiseEvent(NotificationSource src, RemoteMessage message) {
     for (var sub in _notificationSubscribers) {
@@ -66,11 +57,19 @@ class FCMService extends GetxService {
     _notificationSubscribers.remove(handler);
   }
 
-  Future<void> doInit() async {
+  Future<RemoteMessage> doInit() async {
+    // final settings = await FirebaseMessaging.instance.requestPermission(
+    //   alert: true,
+    //   announcement: false,
+    //   badge: true,
+    //   carPlay: false,
+    //   criticalAlert: false,
+    //   provisional: false,
+    //   sound: true,
+    // );
+
     final initMessage = await FirebaseMessaging.instance.getInitialMessage();
-    if (initMessage != null) {
-      _raiseEvent(NotificationSource.InitialMessage, initMessage);
-    }
+
     _streamSubs['onMessage'] = FirebaseMessaging.onMessage.listen((event) {
       _raiseEvent(NotificationSource.OnMessage, event);
     });
@@ -80,6 +79,7 @@ class FCMService extends GetxService {
         FirebaseMessaging.onMessageOpenedApp.listen((event) {
       _raiseEvent(NotificationSource.OnMessageOpenedApp, event);
     });
+    return initMessage;
   }
 
   @override

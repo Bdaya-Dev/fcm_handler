@@ -4,7 +4,6 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:rxdart/rxdart.dart' as rx;
 
@@ -73,8 +72,7 @@ class FCMService extends GetxService {
     _streamSubs['onMessage'] = FirebaseMessaging.onMessage.listen((event) {
       _raiseEvent(NotificationSource.OnMessage, event);
     });
-    //TODO: re-enable background messaging after they fix it
-    //FirebaseMessaging.onBackgroundMessage(handleBackgroundNotifs);
+    FirebaseMessaging.onBackgroundMessage(handleBackgroundNotifs);
     _streamSubs['onMessageOpenedApp'] =
         FirebaseMessaging.onMessageOpenedApp.listen((event) {
       _raiseEvent(NotificationSource.OnMessageOpenedApp, event);

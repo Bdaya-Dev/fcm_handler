@@ -2,7 +2,6 @@ library bdaya_fcm_handler;
 
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:rxdart/rxdart.dart' as rx;
@@ -33,12 +32,12 @@ class FCMService extends GetxService {
   final _notificationSubscribers = <NotificationHandlerFunc>{};
 
   /// A helper stream that combines the current user with its token
-  Stream<CombinedUserToken> get combinedAuthTokenStream =>
-      rx.Rx.combineLatest2<User, String, CombinedUserToken>(
-        FirebaseAuth.instance.authStateChanges(),
-        FirebaseMessaging.instance.onTokenRefresh,
-        (a, b) => CombinedUserToken._(a.uid, b),
-      );
+  // Stream<CombinedUserToken> get combinedAuthTokenStream =>
+  //     rx.Rx.combineLatest2<User, String, CombinedUserToken>(
+  //       FirebaseAuth.instance.authStateChanges(),
+  //       FirebaseMessaging.instance.onTokenRefresh,
+  //       (a, b) => CombinedUserToken._(a.uid, b),
+  //     );
 
   void _raiseEvent(NotificationSource src, RemoteMessage message) {
     for (var sub in _notificationSubscribers) {

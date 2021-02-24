@@ -9,8 +9,9 @@ import 'package:rxdart/rxdart.dart' as rx;
 enum NotificationSource { OnMessage, OnBackgroundMessage, OnMessageOpenedApp }
 
 Future<void> handleBackgroundNotifs(RemoteMessage message) async {
-  Get.find<FCMService>()
-      ._raiseEvent(NotificationSource.OnBackgroundMessage, message);
+  if (Get.isRegistered<FCMService>())
+    Get.find<FCMService>()
+        ._raiseEvent(NotificationSource.OnBackgroundMessage, message);
 }
 
 class CombinedUserToken {

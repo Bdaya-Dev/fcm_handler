@@ -14,7 +14,7 @@ Future<void> handleBackgroundNotifs(RemoteMessage message) async {
 }
 
 /// assign this to find and call the FCM service
-FCMService Function() fcmServiceFinder;
+FCMService Function()? fcmServiceFinder;
 
 class CombinedUserToken {
   final String userId;
@@ -58,7 +58,7 @@ class FCMService {
     _notificationSubscribers.remove(handler);
   }
 
-  Future<RemoteMessage> doInit() async {
+  Future<RemoteMessage?> doInit() async {
     // final settings = await FirebaseMessaging.instance.requestPermission(
     //   alert: true,
     //   announcement: false,

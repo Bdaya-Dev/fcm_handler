@@ -1,11 +1,11 @@
 name: bdaya_fcm_handler
-description: A new Flutter package project.
-version: 0.0.2+2
+description: Helpers for FCM.
+version: 0.0.4+4
 author:
 repository: https://github.com/Bdaya-Dev/fcm_handler
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
   flutter: ">=1.17.0"
 
 dependencies:

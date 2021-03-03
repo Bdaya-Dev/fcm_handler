@@ -2,17 +2,18 @@ library bdaya_fcm_handler;
 
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:rxdart/rxdart.dart' as rx;
 
 enum NotificationSource { OnMessage, OnBackgroundMessage, OnMessageOpenedApp }
 
 Future<void> handleBackgroundNotifs(RemoteMessage message) async {
-  fcmServiceFinder()
-      ._raiseEvent(NotificationSource.OnBackgroundMessage, message);
+  fcmServiceFinder
+      ?.call()
+      ?._raiseEvent(NotificationSource.OnBackgroundMessage, message);
 }
 
+/// assign this to find and call the FCM service
 FCMService Function() fcmServiceFinder;
 
 class CombinedUserToken {
@@ -34,12 +35,12 @@ class FCMService {
   final _notificationSubscribers = <NotificationHandlerFunc>{};
 
   /// A helper stream that combines the current user with its token
-  Stream<CombinedUserToken> get combinedAuthTokenStream =>
-      rx.Rx.combineLatest2<User, String, CombinedUserToken>(
-        FirebaseAuth.instance.authStateChanges(),
-        FirebaseMessaging.instance.onTokenRefresh,
-        (a, b) => CombinedUserToken._(a.uid, b),
-      );
+  // Stream<CombinedUserToken> get combinedAuthTokenStream =>
+  //     rx.Rx.combineLatest2<User, String, CombinedUserToken>(
+  //       FirebaseAuth.instance.authStateChanges(),
+  //       FirebaseMessaging.instance.onTokenRefresh,
+  //       (a, b) => CombinedUserToken._(a.uid, b),
+  //     );
 
   void _raiseEvent(NotificationSource src, RemoteMessage message) {
     for (var sub in _notificationSubscribers) {

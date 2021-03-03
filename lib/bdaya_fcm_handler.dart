@@ -4,15 +4,16 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:get/get.dart';
 import 'package:rxdart/rxdart.dart' as rx;
 
 enum NotificationSource { OnMessage, OnBackgroundMessage, OnMessageOpenedApp }
 
 Future<void> handleBackgroundNotifs(RemoteMessage message) async {
-  Get.find<FCMService>()
+  fcmServiceFinder()
       ._raiseEvent(NotificationSource.OnBackgroundMessage, message);
 }
+
+FCMService Function() fcmServiceFinder;
 
 class CombinedUserToken {
   final String userId;
@@ -27,7 +28,7 @@ typedef NotificationHandlerFunc = void Function(
 /// First: register this service (using normal [Get.put])
 /// Second: register your listeners using [registerSubscriber]
 /// Third: call doInit
-class FCMService extends GetxService {
+class FCMService {
   final Map<String, StreamSubscription> _streamSubs = {};
 
   final _notificationSubscribers = <NotificationHandlerFunc>{};
@@ -80,12 +81,10 @@ class FCMService extends GetxService {
     return initMessage;
   }
 
-  @override
-  void onClose() async {
+  Future<void> onClose() async {
     for (var item in _streamSubs.values) {
       await item.cancel();
     }
     _notificationSubscribers.clear();
-    super.onClose();
   }
 }

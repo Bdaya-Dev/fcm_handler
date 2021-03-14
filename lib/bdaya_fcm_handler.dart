@@ -1,7 +1,6 @@
 library bdaya_fcm_handler;
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -70,9 +69,12 @@ class FCMService {
     _notificationSubscribers.remove(handler);
   }
 
-  Future<RemoteMessage?> doInit([FCMRequestFunc? requestFunc]) async {
+  Future<RemoteMessage?> doInit({
+    FCMRequestFunc? requestFunc,
+    bool Function()? isIosOrMacOs,
+  }) async {
     bool canUseFCM = true;
-    if (kIsWeb || Platform.isIOS || Platform.isMacOS) {
+    if (kIsWeb || (isIosOrMacOs?.call() ?? false)) {
       final settings = await requestFunc?.call();
       if (settings != null) {
         print('User granted permission: ${settings.authorizationStatus}');

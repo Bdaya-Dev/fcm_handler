@@ -1,3 +1,7 @@
+## [1.0.0]
+
+* Improved web support
+
 ## [0.1.1+6]
 
 * Support web

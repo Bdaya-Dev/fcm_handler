@@ -69,12 +69,26 @@ class FCMService {
     _notificationSubscribers.remove(handler);
   }
 
+  /// get current platform from
+  /// ```dart
+  /// Theme.of(context).platform
+  /// ```
+  /// or
+  ///
+  /// [defaultTargetPlatform]
   Future<RemoteMessage?> doInit({
     FCMRequestFunc? requestFunc,
-    bool Function()? isIosOrMacOs,
+    TargetPlatform? platform,
   }) async {
-    bool canUseFCM = true;
-    if (kIsWeb || (isIosOrMacOs?.call() ?? false)) {
+    platform ??= defaultTargetPlatform;
+    bool canUseFCM = true &&
+        platform != TargetPlatform.windows && //disable on windows and linux
+        platform != TargetPlatform.linux;
+
+    if (canUseFCM &&
+        (kIsWeb ||
+            platform == TargetPlatform.iOS ||
+            platform == TargetPlatform.macOS)) {
       final settings = await requestFunc?.call();
       if (settings != null) {
         print('User granted permission: ${settings.authorizationStatus}');

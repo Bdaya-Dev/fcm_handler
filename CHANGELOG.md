@@ -1,3 +1,7 @@
+## [2.0.0]
+
+* Bump version
+
 ## [1.0.0]
 
 * Improved web support

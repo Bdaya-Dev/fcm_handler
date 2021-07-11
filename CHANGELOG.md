@@ -1,3 +1,7 @@
+## [2.0.0]
+
+* Updated firebase version
+
 ## [1.0.0]
 
 * Improved web support

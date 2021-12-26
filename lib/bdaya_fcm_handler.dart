@@ -52,7 +52,7 @@ class FCMService {
   /// Used to get the FCM token and logs the result
   Future<String?> getToken({String? vapidKey, bool logResult = true}) async {
     final token = await FirebaseMessaging.instance.getToken(vapidKey: vapidKey);
-    if (!logResult) {
+    if (logResult) {
       final borders = "=================================================";
       print('$borders\n FCM Token received: ${(token ?? '--')}\n$borders');
     }

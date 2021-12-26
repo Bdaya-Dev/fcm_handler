@@ -1,3 +1,7 @@
+## [3.1.1]
+
+* Fixed wrong logResult behavior
+  
 ## [3.1.0]
 
 * Fix changed behavior of defaultTargetPlatform

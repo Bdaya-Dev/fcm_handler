@@ -1,3 +1,7 @@
+## [3.1.2]
+
+* Added canUseFCM
+
 ## [3.1.1]
 
 * Fixed wrong logResult behavior

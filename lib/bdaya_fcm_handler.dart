@@ -45,12 +45,17 @@ class FCMService {
     }
   }
 
+  bool? _canUseFCM;
+
+  bool get canUseFCM => _canUseFCM ?? false;
+
   /// Convenience stream for [FirebaseMessaging.onTokenRefresh]
   Stream<String> get onTokenRefresh =>
       FirebaseMessaging.instance.onTokenRefresh;
 
   /// Used to get the FCM token and logs the result
   Future<String?> getToken({String? vapidKey, bool logResult = true}) async {
+    if (!canUseFCM) return null;
     final token = await FirebaseMessaging.instance.getToken(vapidKey: vapidKey);
     if (logResult) {
       final borders = "=================================================";
@@ -82,7 +87,7 @@ class FCMService {
   }) async {
     platform ??= defaultTargetPlatform;
     //disable on windows and linux
-    bool canUseFCM = kIsWeb ||
+    _canUseFCM = kIsWeb ||
         (platform != TargetPlatform.windows &&
             platform != TargetPlatform.linux);
 
@@ -92,10 +97,10 @@ class FCMService {
             platform == TargetPlatform.macOS)) {
       final settings = await requestFunc?.call();
       if (settings != null) {
-        print('User granted permission: ${settings.authorizationStatus}');
+        print('User permission: ${settings.authorizationStatus}');
         if (settings.authorizationStatus == AuthorizationStatus.denied ||
             settings.authorizationStatus == AuthorizationStatus.notDetermined) {
-          canUseFCM = false;
+          _canUseFCM = false;
         }
       }
     }

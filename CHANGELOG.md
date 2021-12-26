@@ -1,3 +1,7 @@
+## [3.1.0]
+
+* Fix changed behavior of defaultTargetPlatform
+
 ## [3.0.0]
 
 * Pumb version

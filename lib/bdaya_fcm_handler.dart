@@ -81,9 +81,10 @@ class FCMService {
     TargetPlatform? platform,
   }) async {
     platform ??= defaultTargetPlatform;
-    bool canUseFCM = true &&
-        platform != TargetPlatform.windows && //disable on windows and linux
-        platform != TargetPlatform.linux;
+    //disable on windows and linux
+    bool canUseFCM = kIsWeb ||
+        (platform != TargetPlatform.windows &&
+            platform != TargetPlatform.linux);
 
     if (canUseFCM &&
         (kIsWeb ||

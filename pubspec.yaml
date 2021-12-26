@@ -1,6 +1,6 @@
 name: bdaya_fcm_handler
 description: Helpers for FCM.
-version: 3.0.0
+version: 3.1.0
 repository: https://github.com/Bdaya-Dev/fcm_handler
 
 environment:

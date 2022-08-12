@@ -1,3 +1,7 @@
+## [4.0.0]
+
+* Updated firebase to v12
+
 ## [3.1.2]
 
 * Added canUseFCM

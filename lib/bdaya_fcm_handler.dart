@@ -1,6 +1,7 @@
 library bdaya_fcm_handler;
 
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -59,7 +60,7 @@ class FCMService {
     final token = await FirebaseMessaging.instance.getToken(vapidKey: vapidKey);
     if (logResult) {
       final borders = "=================================================";
-      print('$borders\n FCM Token received: ${(token ?? '--')}\n$borders');
+      log('$borders\n FCM Token received: ${(token ?? '--')}\n$borders');
     }
     return token;
   }

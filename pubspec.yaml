@@ -1,17 +1,16 @@
 name: bdaya_fcm_handler
 description: Helpers for FCM.
-version: 4.0.0
+version: 5.0.0
 repository: https://github.com/Bdaya-Dev/fcm_handler
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
-  flutter: ">=1.17.0"
+  sdk: ">=2.12.0 <4.0.0"  
 
 dependencies:
   flutter:
     sdk: flutter
-  firebase_messaging: ^12.0.2
-  firebase_core: ^1.20.1
+  firebase_messaging: ^14.6.2
+  firebase_core: ^2.13.1
 
 dev_dependencies:
   flutter_test:

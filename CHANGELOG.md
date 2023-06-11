@@ -1,3 +1,7 @@
+## [5.0.0]
+
+* Updated `firebase_messaging` to v14
+
 ## [4.0.0]
 
 * Updated firebase to v12
